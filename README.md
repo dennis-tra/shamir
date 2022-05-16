@@ -31,16 +31,18 @@ Extra care needs to be taken when dealing with secrets. Therefore, this tiny too
 
 - **credible** - It uses [Hashicorp Vault's](https://github.com/hashicorp/vault/tree/main/shamir) Shamir's Secret Sharing implementation.
 - **minimal** - It only uses Go's standard library besides the above dependency.
-- **approachable** - The 131 LoC should be quick and easy to audit.
+- **approachable** - The 131 [LoC](https://de.wikipedia.org/wiki/Lines_of_Code) should be quick and easy to audit yourself.
 
 Further it's:
 
 - **configurable** - You can configure the number of shares and the number of shares needed to restore the secret.
 - **composable** - You can pipe [stdin](https://en.wikipedia.org/wiki/Standard_streams) to it and use it in scripts.
 
+> *Write programs that do one thing and do it well.* - [Douglas McIlroy](https://en.wikipedia.org/wiki/Douglas_McIlroy)
+
 ## Install
 
-When you are dealing with secrets I would recommend compiling the 131 LoC yourself instead of relying on a binary distribution:
+When you are dealing with secrets I would recommend compiling the code yourself instead of relying on a binary distribution:
 
 ```shell
 go install github.com/dennis-tra/shamir@latest
@@ -52,13 +54,18 @@ Make sure the `$GOPATH/bin` is in your `PATH` variable to access the installed `
 
 ### Split
 
-Let's imagine you have confidential data in a file called `secret.txt`. You can then run any of the following commands:
+Let's imagine you have confidential data in a file called `secret.txt`. You could then run any of the following commands:
 
 ```shell
 $ shamir split secret.txt
 $ shamir split -shares 10 -threshold 5 secret.txt
 $ cat secret.txt | shamir split
 ```
+
+The CLI exposes the following options:
+
+- `-shares` - The number of shares to split the secret into.
+- `-threshold` - The number of shares needed to restore the secret.
 
 Example:
 
@@ -74,7 +81,7 @@ Each line corresponds to one share of which you need any three to restore the or
 
 ### Restore
 
-Let's imagine you have a file called `shares.txt` which contains more than `threshold` shares of your secret **separated by newlines**. E.g., you can then run any of the following commands:
+Let's imagine you have a file called `shares.txt` which contains more than `threshold` shares of your secret **separated by newlines**. You could then run any of the following commands:
 
 ```shell
 $ shamir restore shares.txt
@@ -90,7 +97,7 @@ $ echo "9dV1XA0pJV2RDzLYh6qwKzjxJ+iBrd9W\nByQs4+phvdU2zXzMjYvjA+7qLLTke8Uk\ngU3G
 My very secret secret.
 ```
 
-Note the `\n` characters in the `echo` command to separate the shares from above.
+Note the `\n` characters in the `echo` command to separate the shares from above. Share ordering is not relevant.
 
 ## Related Efforts
 
