@@ -113,7 +113,7 @@ func source(filename string) (io.ReadCloser, error) {
 	if filename == "" {
 		stat, err := os.Stdin.Stat()
 		if err != nil {
-			return nil, fmt.Errorf("you have an error in stdin:%s", err)
+			return nil, fmt.Errorf("you have an error in stdin: %w", err)
 		}
 
 		if (stat.Mode() & os.ModeNamedPipe) == 0 {
@@ -125,7 +125,7 @@ func source(filename string) (io.ReadCloser, error) {
 
 	f, err := os.Open(filename)
 	if err != nil {
-		return nil, fmt.Errorf("error opening file: %q, %v", filename, err)
+		return nil, fmt.Errorf("error opening file %q: %w", filename, err)
 	}
 	return f, nil
 }
