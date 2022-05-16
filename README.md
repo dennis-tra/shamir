@@ -79,6 +79,14 @@ ByQs4+phvdU2zXzMjYvjA+7qLLTke8Uk
 
 Each line corresponds to one share of which you need any three to restore the original message.
 
+To create separate files for each share, pipe `shamir` to the unix `split` command:
+
+```shell
+$ echo "My very secret secret." | shamir split -shares 4 -threshold 3 | split -l 1 - share_
+```
+
+The above command will create 4 files named `share_aa`, `share_ab`, `share_ac` and `share_ad`. `-l 1` means to split after each line, `-` means to use stdin and `share_` is the prefix for the files.
+
 ### Restore
 
 Let's imagine you have a file called `shares.txt` which contains more than `threshold` shares of your secret **separated by newlines**. You could then run any of the following commands:
