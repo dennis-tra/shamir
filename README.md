@@ -2,7 +2,7 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-A thin CLI frontend for [Hashicorp Vault's](https://www.vaultproject.io/) [Shamir's Secret Sharing](https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing) [implementation](https://github.com/hashicorp/vault/tree/main/shamir). This allows you to split a secret into `x` shares, and then combine them back into a single secret using any `y` of those shares with `y <= x`.
+A CLI frontend for [Hashicorp Vault's](https://www.vaultproject.io/) [Shamir's Secret Sharing](https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing) [implementation](https://github.com/hashicorp/vault/tree/main/shamir). This allows you to split a secret into `x` shares, and then combine them back into a single secret using any `y` of those shares with `y <= x`.
 
 ```shell
 $ shamir split secret.txt # default: split into 5 shares where you need any 3 to restore the secret (numbers configurable)
@@ -85,7 +85,7 @@ To create separate files for each share, pipe `shamir` to the unix `split` comma
 $ echo "My very secret secret." | shamir split -shares 4 -threshold 3 | split -l 1 - share_
 ```
 
-The above command will create 4 files named `share_aa`, `share_ab`, `share_ac` and `share_ad`. `-l 1` means to split after each line, `-` means to use stdin and `share_` is the prefix for the files.
+`-l 1` means to split after each line, `-` means to use stdin and `share_` is the prefix for the files. The above command will create 4 files named `share_aa`, `share_ab`, `share_ac` and `share_ad`. 
 
 ### Restore
 
@@ -121,4 +121,4 @@ Feel free to dive in! [Open an issue](https://github.com/RichardLitt/standard-re
 
 ## License
 
-[MIT](LICENSE) © Dennis Trautwein
+[Apache 2.0](LICENSE) © Dennis Trautwein
