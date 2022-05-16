@@ -14,8 +14,8 @@ import (
 
 func main() {
 	splitCmd := flag.NewFlagSet("split", flag.ExitOnError)
-	parts := splitCmd.Int("parts", 5, "Number of parts to split into")
-	threshold := splitCmd.Int("threshold", 3, "Number of parts needed to restore")
+	shares := splitCmd.Int("shares", 5, "Number of shares to split into")
+	threshold := splitCmd.Int("threshold", 3, "Number of shares needed to restore")
 
 	restoreCmd := flag.NewFlagSet("restore", flag.ExitOnError)
 
@@ -31,7 +31,7 @@ func main() {
 		if err != nil {
 			break
 		}
-		err = split(splitCmd.Arg(0), *parts, *threshold)
+		err = split(splitCmd.Arg(0), *shares, *threshold)
 	case "restore":
 		err = restoreCmd.Parse(os.Args[2:])
 		if err != nil {
@@ -48,7 +48,7 @@ func main() {
 	}
 }
 
-func split(filename string, parts int, threshold int) error {
+func split(filename string, shares int, threshold int) error {
 	src, err := source(filename)
 	if err != nil {
 		return err
@@ -60,13 +60,13 @@ func split(filename string, parts int, threshold int) error {
 		return err
 	}
 
-	byteParts, err := shamir.Split(secret, parts, threshold)
+	byteShares, err := shamir.Split(secret, shares, threshold)
 	if err != nil {
 		return err
 	}
 
-	for _, bytePart := range byteParts {
-		fmt.Println(base64.StdEncoding.EncodeToString(bytePart))
+	for _, byteShare := range byteShares {
+		fmt.Println(base64.StdEncoding.EncodeToString(byteShare))
 	}
 
 	return nil
@@ -83,23 +83,23 @@ func restore(filename string) error {
 	if err != nil {
 		return err
 	}
-	strParts := strings.Split(string(data), "\n")
+	strShares := strings.Split(string(data), "\n")
 
-	byteParts := [][]byte{}
-	for _, strPart := range strParts {
-		if strPart == "" {
+	byteShares := [][]byte{}
+	for _, strShare := range strShares {
+		if strShare == "" {
 			continue
 		}
 
-		bytePart, err := base64.StdEncoding.DecodeString(strPart)
+		byteShare, err := base64.StdEncoding.DecodeString(strShare)
 		if err != nil {
 			return err
 		}
 
-		byteParts = append(byteParts, bytePart)
+		byteShares = append(byteShares, byteShare)
 	}
 
-	secret, err := shamir.Combine(byteParts)
+	secret, err := shamir.Combine(byteShares)
 	if err != nil {
 		return err
 	}
