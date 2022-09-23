@@ -1,4 +1,4 @@
-module shamir
+module github.com/dennis-tra/shamir
 
 go 1.18
 
